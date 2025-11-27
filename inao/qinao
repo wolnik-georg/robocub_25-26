@@ -1,0 +1,9 @@
+#!/bin/sh
+
+naoip=$1
+if [ -z $naoip ]; then
+printf "Please input address of NAO: "
+read naoip
+fi
+
+cd $(dirname $0); ipython qtconsole --autocall=2 --IPythonWidget.banner="inao -- An enhanced Interactive Python for NAO" --InteractiveShellApp.code_to_run="print; from inao import NAO; nao=NAO('$naoip')"

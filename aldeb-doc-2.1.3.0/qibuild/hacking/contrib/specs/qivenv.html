@@ -1,0 +1,298 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>qivenv: virtualenv meets worktree &mdash; qiBuild 2.1.3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.1.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="qiBuild 2.1.3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Specs" href="index.html" />
+    <link rel="next" title="Handling host-build for cross-compilation" href="handling_host_build_for_cross_compilation.html" />
+    <link rel="prev" title="qidoc3" href="qidoc3.html" />
+ 
+<script type="text/javascript" src="https://community.aldebaran-robotics.com/static/js/include_doc.js"></script>
+<script>
+$(window).ready(function () {
+    var width_label = 0;
+    $('dl.function-index dt > span').each(function () {
+        $(this).css('width', 'auto');
+        width_label = Math.max(width_label, $(this).width());
+    }).width(width_label + 30);
+})
+
+</script>
+
+
+  </head>
+  <body>
+
+    <div class="document">
+  <div id="custom-doc" class="yui-t3">
+    <div id="hd">
+      <h1><a href="../../../index.html">qiBuild documentation</a></h1>
+      <div id="global-nav">
+        <a title="NAOqi Developer guide" href="../../../index.html">Home</a>
+        
+         |
+        <a title="Search" href="../../../search.html">Search</a>
+         |
+        <a title="Index" href="../../../genindex.html">Index</a>
+        
+         |
+        <a title="CMake index" href="../../../cmake-functions-index.html">CMake index</a>
+         |
+        <a title="Python index" href="../../../py-modindex.html">Python index</a>
+        
+        
+      </div>
+      <div class="nav">
+    &laquo; <a href="qidoc3.html" title="qidoc3">previous</a>
+     |
+    <a href="index.html" title="Specs" accesskey="U">up</a>
+   |
+    <a href="handling_host_build_for_cross_compilation.html" title="Handling host-build for cross-compilation">next</a> &raquo;</div>
+    </div>
+
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="hacking-contrib-specs-qivenv">
+            
+  <div class="section" id="qivenv-virtualenv-meets-worktree">
+<h1>qivenv: virtualenv meets worktree<a class="headerlink" href="#qivenv-virtualenv-meets-worktree" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="general">
+<h2>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h2>
+<p>Main goal: make it easy to work with Python code inside a worktree,
+i.e avoid having to manually set <tt class="docutils literal"><span class="pre">PYTHONPATH</span></tt> and other environment
+variables.</p>
+<p>We&#8217;ll use <tt class="docutils literal"><span class="pre">pip</span></tt> and <tt class="docutils literal"><span class="pre">virtualenv</span></tt> because they are becoming
+the standard to deal with this kind of issues.</p>
+<p>More precisely:</p>
+<ul>
+<li><p class="first">Handle 3rd-party libraries</p>
+</li>
+<li><dl class="first docutils">
+<dt>Handle code that is inside a worktree, which means it&#8217;s possible</dt>
+<dd><p class="first last">to use &#8216;import foo&#8217; and directly use the code from <tt class="docutils literal"><span class="pre">&lt;worktree&gt;/foo</span></tt>,
+without having to write a <tt class="docutils literal"><span class="pre">setup.py</span></tt></p>
+</dd>
+</dl>
+</li>
+<li><p class="first">Handle python extensions written in C++ depending one one or more
+qibuild CMake projects.</p>
+</li>
+<li><p class="first">Handle C++ code that embeds a Python interpreter and loads Python extensions.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="rd-party-libraries">
+<h2>3rd party libraries<a class="headerlink" href="#rd-party-libraries" title="Permalink to this headline">¶</a></h2>
+<p>This is useful for instance in <tt class="docutils literal"><span class="pre">qidoc</span></tt>, to specify  the <tt class="docutils literal"><span class="pre">sphinx</span></tt> version and its deps,
+or the tools in <tt class="docutils literal"><span class="pre">spinxcontrib</span></tt>, and so on.</p>
+<p>This is also useful for whatever <tt class="docutils literal"><span class="pre">Python</span></tt> project.</p>
+<div class="section" id="solution">
+<h3>Solution<a class="headerlink" href="#solution" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>A <tt class="docutils literal"><span class="pre">requirements.txt</span></tt> (as usual for pip)</li>
+<li>A hidden virtualenv in <tt class="docutils literal"><span class="pre">.qi/venv</span></tt> automatically created and activated.</li>
+</ul>
+<p>For instance, for <tt class="docutils literal"><span class="pre">qidoc</span></tt>, we read the <tt class="docutils literal"><span class="pre">requirements.txt</span></tt> from the templates repo
+if it exists and use a virtualenv in <tt class="docutils literal"><span class="pre">.qi/venv/qidoc</span></tt></p>
+</div>
+</div>
+<div class="section" id="python-code-inside-worktree">
+<h2>Python code inside worktree<a class="headerlink" href="#python-code-inside-worktree" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>We&#8217;ll keep the <tt class="docutils literal"><span class="pre">qiproject.xml</span></tt> syntax</li>
+</ul>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;qiproject</span> <span class="na">version=</span><span class="s">&quot;3&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;pyproject</span> <span class="na">name=</span><span class="s">&quot;foo&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/qiproject&gt;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>By default, name is read from <tt class="docutils literal"><span class="pre">setup.py</span></tt> if it exists</li>
+<li>By default, list of deps is read from <tt class="docutils literal"><span class="pre">requirements.txt</span></tt> if it exists</li>
+<li>The virtualenv is in &lt;worktree&gt;/.qi/venv/&lt;name&gt;
+The tool automatically add the paths of the python projects to
+&lt;worktree&gt;.qi/venv/&lt;name&gt;/lib/site-packages/qivenv.pth</li>
+</ul>
+</div>
+<div class="section" id="python-that-depends-on-c">
+<h2>Python that depends on C++<a class="headerlink" href="#python-that-depends-on-c" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Exactly the same thing, except that we add <tt class="docutils literal"><span class="pre">&lt;build&gt;/sdk/lib/python&lt;version&gt;/site-pacakges&gt;</span></tt> to the <tt class="docutils literal"><span class="pre">.pth</span></tt> file</li>
+<li>We also do the required magic in CMake so that setting <tt class="docutils literal"><span class="pre">PATH</span></tt>, <tt class="docutils literal"><span class="pre">LD_LIBRARY_PATH</span></tt>
+or <tt class="docutils literal"><span class="pre">DYLD_LIBRARY_PATH</span></tt> is not necessary, OR we generate a python wrapper that does this.</li>
+</ul>
+</div>
+<div class="section" id="embedded-python-interpreter-in-c">
+<h2>Embedded Python interpreter in C++<a class="headerlink" href="#embedded-python-interpreter-in-c" title="Permalink to this headline">¶</a></h2>
+<p>Again, the same thing, but we use <tt class="docutils literal"><span class="pre">virtualenv</span> <span class="pre">--python=${PYTHON_EXECUTABLE}</span></tt>, wher
+PYTHON_EXECUTABLE is found by CMake. So if you are using Python from your system,
+nothing changes, and if you are using Python from a toolchain, you use it in the
+virtualenv.</p>
+</div>
+<div class="section" id="command-line-api">
+<h2>Command line API<a class="headerlink" href="#command-line-api" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">qivenv</span> <span class="pre">list</span></tt> : list the available virtualenvs in the worktree</li>
+<li><tt class="docutils literal"><span class="pre">qivenv</span> <span class="pre">add</span> <span class="pre">&lt;name&gt;</span> <span class="pre">[-c</span> <span class="pre">config]</span></tt>: add a new virtualenv to the worktree</li>
+<li><tt class="docutils literal"><span class="pre">qivenv</span> <span class="pre">rm</span> <span class="pre">&lt;name&gt;</span></tt>: remove a virtualenv from the worktree</li>
+<li><tt class="docutils literal"><span class="pre">qivenv</span> <span class="pre">use</span> <span class="pre">&lt;name&gt;</span></tt>: use the given virtualenv</li>
+</ul>
+<p>Examples:</p>
+<div class="section" id="running-py-test">
+<h3>Running py.test<a class="headerlink" href="#running-py-test" title="Permalink to this headline">¶</a></h3>
+<p>I want to run <tt class="docutils literal"><span class="pre">py.test</span></tt> on the <tt class="docutils literal"><span class="pre">foo</span></tt> project that depends on the <tt class="docutils literal"><span class="pre">bar</span></tt> project.</p>
+<ul class="simple">
+<li>In <tt class="docutils literal"><span class="pre">foo/requirements.txt</span></tt> I add:</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">pytest</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>Then I run</li>
+</ul>
+<div class="highlight-python"><pre>$ qivenv use default</pre>
+</div>
+</div>
+<div class="section" id="using-some-python-extension-that-depends-on-c-code">
+<h3>Using some Python extension that depends on C++ code<a class="headerlink" href="#using-some-python-extension-that-depends-on-c-code" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><pre>$ qibuild configure -c &lt;config&gt; myext
+$ qivenv add &lt;config&gt;
+$ qivenv use &lt;config&gt;
+
+$ python
+&gt;&gt;&gt; import myext</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <!-- <div class="footernav">
+    &laquo; <a href="qidoc3.html" title="qidoc3">qidoc3</a>
+     |
+    <a href="index.html" title="Specs" accesskey="U">Specs</a>
+   |
+    <a href="handling_host_build_for_cross_compilation.html" title="Handling host-build for cross-compilation">Handling host-build for cross-compilation</a> &raquo;</div> -->
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+  <h3>Table Of Contents</h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../beginner/index.html">Welcome to qiBuild documentation !</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../advanced/index.html">Advanced qibuild usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Hacking qiBuild</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Contributing to qiBuild</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../reporting_bugs.html">Reporting qiBuild issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../todo.html">qibuild TODO</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Specs</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="qidoc3.html">qidoc3</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="">qivenv: virtualenv meets worktree</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="handling_host_build_for_cross_compilation.html">Handling host-build for cross-compilation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cmake/coding_guide.html">CMake coding guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/coding_guide.html">Python coding guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../test_driven_development.html">qibuild: using test driven development</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../running_test_suite.html">Running qiBuild test suite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../writing_new_tests.html">Writing new tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../writing_documentation.html">Writing qiBuild documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/cmake/managing_deps.html">Managing dependences with qiBuild: an overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/cmake/searching.html">Search order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/cmake/shared_libs.html">Managing shared libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/cmake/index.html">qiBuild CMake framework design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/python/index.html">qiBuild Python framework design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/index.html">qiBuild design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python/index.html">qiBuild Python documentation</a></li>
+</ul>
+</li>
+</ul>
+
+    <h3><a href="../../../index.html">On this page</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">qivenv: virtualenv meets worktree</a><ul>
+<li><a class="reference internal" href="#general">General</a></li>
+<li><a class="reference internal" href="#rd-party-libraries">3rd party libraries</a><ul>
+<li><a class="reference internal" href="#solution">Solution</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#python-code-inside-worktree">Python code inside worktree</a></li>
+<li><a class="reference internal" href="#python-that-depends-on-c">Python that depends on C++</a></li>
+<li><a class="reference internal" href="#embedded-python-interpreter-in-c">Embedded Python interpreter in C++</a></li>
+<li><a class="reference internal" href="#command-line-api">Command line API</a><ul>
+<li><a class="reference internal" href="#running-py-test">Running py.test</a></li>
+<li><a class="reference internal" href="#using-some-python-extension-that-depends-on-c-code">Using some Python extension that depends on C++ code</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+          </div>
+        
+      
+    </div>
+
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="qidoc3.html" title="qidoc3">previous</a>
+     |
+    <a href="index.html" title="Specs" accesskey="U">up</a>
+   |
+    <a href="handling_host_build_for_cross_compilation.html" title="Handling host-build for cross-compilation">next</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+naoip=$1
+if [ -z $naoip ]; then
+printf "Please input address of NAO: "
+read naoip
+fi
+
+echo "inao -- An enhanced Interactive Python for NAO"
+cd $(dirname $0); ipython2 --no-banner --autocall=2 -i -c "from inao import NAO; nao=NAO('$naoip')"

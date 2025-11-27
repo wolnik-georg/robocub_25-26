@@ -1,0 +1,791 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Basic Channel - What can I say to NAO &mdash; Aldebaran 2.1.3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.1.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Aldebaran 2.1.3.0 documentation" href="../index.html" />
+    <link rel="up" title="More details about NAO" href="understanding.html" />
+    <link rel="next" title="Apps 2.0 Store" href="store_home.html" />
+    <link rel="prev" title="Understanding Autonomous Life settings" href="nao_life.html" />
+ 
+<script type="text/javascript" src="https://community.aldebaran-robotics.com/static/js/include_doc.js"></script>
+<script>
+$(window).ready(function () {
+    var width_label = 0;
+    $('dl.function-index dt > span').each(function () {
+        $(this).css('width', 'auto');
+        width_label = Math.max(width_label, $(this).width());
+    }).width(width_label + 30);
+})
+
+</script>
+
+
+  </head>
+  <body>
+
+    <div class="document">
+  <div id="custom-doc" class="yui-t3">
+    <div id="hd">
+      <h1><a href="../index.html">Aldebaran documentation</a></h1>
+      <div id="global-nav">
+        <a title="NAOqi Developer guide" href="../index.html">Home</a>
+        
+         |
+        <a title="NAO documentation" href="../home_nao.html">NAO</a>
+         |
+        <a title="Romeo Documentation" href="../home_romeo.html">Romeo</a>
+         |
+       <a title="Site map" href="../contents.html">Site map</a>
+        
+         |
+        <a title="Search" href="../search.html">Search</a>
+         |
+        <a title="Index" href="../genindex.html">Index</a>
+        
+        
+      </div>
+      <div class="nav">
+    &laquo; <a href="nao_life.html" title="Understanding Autonomous Life settings">previous</a>
+     |
+    <a href="understanding.html" title="More details about &lt;em&gt;NAO&lt;/em&gt;" accesskey="U">up</a>
+   |
+    <a href="store_home.html" title="&lt;em&gt;Apps 2.0 Store&lt;/em&gt;">next</a> &raquo;</div>
+    </div>
+
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="nao-basic_channel_conversation">
+            
+  <div class="section" id="basic-channel-what-can-i-say-to-robon">
+<span id="bchannel-text"></span><h1>Basic Channel - What can I say to <em>NAO</em><a class="headerlink" href="#basic-channel-what-can-i-say-to-robon" title="Permalink to this headline">¶</a></h1>
+<p>If you do not know what you could say to <em>NAO</em>, try one of the following sentences.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Prerequisite</strong>: <a class="reference internal" href="nao_life.html#alife"><em>Autonomous Life</em></a>: <strong>ON</strong> - <a class="reference internal" href="nao_life.html#basic-channel"><em>Basic Channel</em></a>: <strong>ON</strong></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="english-french">
+<h2>English - French<a class="headerlink" href="#english-french" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="meet-robon">
+<h3>Meet <em>NAO</em><a class="headerlink" href="#meet-robon" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="47%" />
+<col width="53%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">English</th>
+<th class="head">French</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>How are you?</td>
+<td>Tu vas bien?</td>
+</tr>
+<tr class="row-odd"><td>How goes it?</td>
+<td>Comment ça va?</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="47%" />
+<col width="53%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">English</th>
+<th class="head">French</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>What can you do?</td>
+<td>Que sais-tu faire?</td>
+</tr>
+<tr class="row-odd"><td>What cannot you do?</td>
+<td>Qu&#8217;est-ce que tu ne sais pas faire?</td>
+</tr>
+<tr class="row-even"><td>How do I install an application?</td>
+<td>Comment faire pour installer une application?</td>
+</tr>
+<tr class="row-odd"><td>What can you talk about?</td>
+<td>On peut parler de quoi?</td>
+</tr>
+<tr class="row-even"><td>What do we do now?</td>
+<td>On fait quoi maintenant?</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="47%" />
+<col width="53%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">English</th>
+<th class="head">French</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Can I touch you?</td>
+<td>Est-ce que je peux te toucher?</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="about-the-talk">
+<h3>About the talk<a class="headerlink" href="#about-the-talk" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="47%" />
+<col width="53%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">English</th>
+<th class="head">French</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Tell me something.</td>
+<td>Dis-moi quelque chose.</td>
+</tr>
+<tr class="row-odd"><td>Change the subject.</td>
+<td>Dis-moi autre chose.</td>
+</tr>
+<tr class="row-even"><td>What did I say?</td>
+<td>Qu&#8217;est-ce que j&#8217;ai dit?</td>
+</tr>
+<tr class="row-odd"><td>I didn&#8217;t understand.</td>
+<td>Je n&#8217;ai pas compris.</td>
+</tr>
+<tr class="row-even"><td>What was the question?</td>
+<td>C&#8217;est quoi la question?</td>
+</tr>
+<tr class="row-odd"><td>What were we talking about?</td>
+<td>De quoi on parlait?</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="about-settings-and-system">
+<h3>About settings and system<a class="headerlink" href="#about-settings-and-system" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="47%" />
+<col width="53%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">English</th>
+<th class="head">French</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>What is your battery level?</td>
+<td>Quel est ton niveau de batterie?</td>
+</tr>
+<tr class="row-odd"><td>Do you need charging?</td>
+<td>Est-ce que tu as besoin de te recharger?</td>
+</tr>
+<tr class="row-even"><td>Are you hungry?</td>
+<td>Tu as faim?</td>
+</tr>
+<tr class="row-odd"><td>What is your exact battery level?</td>
+<td>Quel est ton pourcentage de batterie?</td>
+</tr>
+<tr class="row-even"><td>Are you charging?</td>
+<td>Es-tu en charge?</td>
+</tr>
+<tr class="row-odd"><td>Speak softer.</td>
+<td>Parle moins fort.</td>
+</tr>
+<tr class="row-even"><td>Speak louder.</td>
+<td>Parle plus fort.</td>
+</tr>
+<tr class="row-odd"><td>I want to configure the WiFi.</td>
+<td>Je veux configurer le WiFi.</td>
+</tr>
+<tr class="row-even"><td>Are you connected to the WiFi?</td>
+<td>Est-ce que tu as le WiFi?</td>
+</tr>
+<tr class="row-odd"><td>Search on the web.</td>
+<td>Fais une recherche sur le net.</td>
+</tr>
+<tr class="row-even"><td>What is your IP address?</td>
+<td>C&#8217;est quoi ton adresse IP?</td>
+</tr>
+<tr class="row-odd"><td>What time is it?</td>
+<td>Quelle heure est-il?</td>
+</tr>
+<tr class="row-even"><td>What day are we?</td>
+<td>On est quel jour?</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="robon-s-skills">
+<h3><em>NAO</em>&#8216;s skills<a class="headerlink" href="#robon-s-skills" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="47%" />
+<col width="53%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">English</th>
+<th class="head">French</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Give me an example</td>
+<td>Donne-moi un exemple.</td>
+</tr>
+<tr class="row-odd"><td>Can you walk?</td>
+<td>Est-ce que tu peux marcher?</td>
+</tr>
+<tr class="row-even"><td>Give me a hug!</td>
+<td>Fais-moi un câlin!</td>
+</tr>
+<tr class="row-odd"><td>Touch me!</td>
+<td>Touche-moi!</td>
+</tr>
+<tr class="row-even"><td>Come to me!</td>
+<td>Viens vers moi!</td>
+</tr>
+<tr class="row-odd"><td>Can you walk forward?</td>
+<td>Tu peux avancer?</td>
+</tr>
+<tr class="row-even"><td>Can you walk backwards?</td>
+<td>Tu peux reculer?</td>
+</tr>
+<tr class="row-odd"><td>Turn your engines off.</td>
+<td>éteins tes moteurs.</td>
+</tr>
+<tr class="row-even"><td>Turn your engines on.</td>
+<td>Allume tes moteurs.</td>
+</tr>
+<tr class="row-odd"><td>Can you turn your head?</td>
+<td>Tourne la tête.</td>
+</tr>
+<tr class="row-even"><td>Lay down</td>
+<td>Allonge-toi.</td>
+</tr>
+<tr class="row-odd"><td>Can you spin?</td>
+<td>Fais un tour sur toi-même.</td>
+</tr>
+<tr class="row-even"><td>Can you open your left hand?</td>
+<td>Tu peux ouvrir ta main gauche?</td>
+</tr>
+<tr class="row-odd"><td>Can you open your right hand?</td>
+<td>Tu peux ouvrir ta main droite?</td>
+</tr>
+<tr class="row-even"><td>Can you open your hands?</td>
+<td>Tu peux ouvrir les mains?</td>
+</tr>
+<tr class="row-odd"><td>Can you open your hand?</td>
+<td>Tu peux ouvrir ta main?</td>
+</tr>
+<tr class="row-even"><td>Can you close your left hand?</td>
+<td>Tu peux fermer ta main gauche?</td>
+</tr>
+<tr class="row-odd"><td>Can you close your right hand?</td>
+<td>Tu peux fermer ta main droite?</td>
+</tr>
+<tr class="row-even"><td>Can you close your hand?</td>
+<td>Tu peux fermer ta main?</td>
+</tr>
+<tr class="row-odd"><td>Can you close your hands?</td>
+<td>Tu peux fermer les mains?</td>
+</tr>
+<tr class="row-even"><td>Make your hands move.</td>
+<td>Fais bouger tes mains.</td>
+</tr>
+<tr class="row-odd"><td>Make your left hand move.</td>
+<td>Fais bouger ta main gauche.</td>
+</tr>
+<tr class="row-even"><td>Make your right hand move.</td>
+<td>Fais bouger ta main droite.</td>
+</tr>
+<tr class="row-odd"><td>Can you raise your arm?</td>
+<td>Lève le bras.</td>
+</tr>
+<tr class="row-even"><td>Can you stretch your arms?</td>
+<td>Tends tes bras</td>
+</tr>
+<tr class="row-odd"><td>Can you stretch your left arm?</td>
+<td>Tends ton bras gauche.</td>
+</tr>
+<tr class="row-even"><td>Can you stretch your right arm?</td>
+<td>Tends ton bras droit.</td>
+</tr>
+<tr class="row-odd"><td>Hands up!</td>
+<td>Mains en l&#8217;air!</td>
+</tr>
+<tr class="row-even"><td>Can you put your hands behind?</td>
+<td>Mets tes mains en arrière.</td>
+</tr>
+<tr class="row-odd"><td>Can you shake my hand?</td>
+<td>Tu peux me serrer la main?</td>
+</tr>
+<tr class="row-even"><td>Can you say goodbye?</td>
+<td>Fais-moi coucou.</td>
+</tr>
+<tr class="row-odd"><td>Can you point at me?</td>
+<td>Montre-moi du doigt.</td>
+</tr>
+<tr class="row-even"><td>Can you look elsewhere?</td>
+<td>Regarde ailleurs.</td>
+</tr>
+<tr class="row-odd"><td>Stop looking at me.</td>
+<td>Baisse les yeux.</td>
+</tr>
+<tr class="row-even"><td>Can you move your head?</td>
+<td>Bouge la tête.</td>
+</tr>
+<tr class="row-odd"><td>Can you turn your head to the right?</td>
+<td>Regarde vers la droite.</td>
+</tr>
+<tr class="row-even"><td>To the other side.</td>
+<td>De l&#8217;autre côté.</td>
+</tr>
+<tr class="row-odd"><td>Can you turn your head to the left?</td>
+<td>Regarde vers la gauche.</td>
+</tr>
+<tr class="row-even"><td>To the other side.</td>
+<td>De l&#8217;autre côté.</td>
+</tr>
+<tr class="row-odd"><td>Can you look up?</td>
+<td>Lève la tête.</td>
+</tr>
+<tr class="row-even"><td>Can&#8217;t you look higher up?</td>
+<td>Tu peux pas regarder plus haut?</td>
+</tr>
+<tr class="row-odd"><td>Can you look at me?</td>
+<td>Regarde-moi.</td>
+</tr>
+<tr class="row-even"><td>Can you look at me in the eyes?</td>
+<td>Tu peux me regarder</td>
+</tr>
+<tr class="row-odd"><td>Stop shaking your head.</td>
+<td>Arrête de bouger la tête comme ça.</td>
+</tr>
+<tr class="row-even"><td>You shake your head too much.</td>
+<td>Tu remues trop la tête.</td>
+</tr>
+<tr class="row-odd"><td>Put your hands in front of your eyes.</td>
+<td>Mets tes mains devant les yeux.</td>
+</tr>
+<tr class="row-even"><td>Can you do a backflip.</td>
+<td>Fais un saut périlleux.</td>
+</tr>
+<tr class="row-odd"><td>Do it!</td>
+<td>Tu peux le faire!</td>
+</tr>
+<tr class="row-even"><td>Can you do pushups?</td>
+<td>Tu peux faire des pompes?</td>
+</tr>
+<tr class="row-odd"><td>Can you stand on one foot?</td>
+<td>Mets-toi sur un pied.</td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Prends-moi la main.</td>
+</tr>
+<tr class="row-odd"><td>Can you cross your arms?</td>
+<td>Tu peux croiser les bras?</td>
+</tr>
+<tr class="row-even"><td>Can you turn your head on a 180 degrees angle?</td>
+<td>Fais tourner ta tête de 180 degrés.</td>
+</tr>
+<tr class="row-odd"><td>Can you jump?</td>
+<td>Tu peux sauter?</td>
+</tr>
+<tr class="row-even"><td>Can you stand up?</td>
+<td>Tu peux te lever?</td>
+</tr>
+<tr class="row-odd"><td>Can you sit down?</td>
+<td>Tu peux t&#8217;asseoir?</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="more-about-robon">
+<h3>More about <em>NAO</em><a class="headerlink" href="#more-about-robon" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="47%" />
+<col width="53%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">English</th>
+<th class="head">French</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>What&#8217;s your name?</td>
+<td>Comment tu t&#8217;appelles?</td>
+</tr>
+<tr class="row-odd"><td>Who are you?</td>
+<td>Qui es-tu?</td>
+</tr>
+<tr class="row-even"><td>What are you?</td>
+<td>Qu&#8217;est-ce que tu es?</td>
+</tr>
+<tr class="row-odd"><td>Who made you?</td>
+<td>Qui t&#8217;a fabriqué?</td>
+</tr>
+<tr class="row-even"><td>Where were you made?</td>
+<td>Où as-tu été fabriqué?</td>
+</tr>
+<tr class="row-odd"><td>Introduce yourself.</td>
+<td>Présente-toi.</td>
+</tr>
+<tr class="row-even"><td>How tall are you?</td>
+<td>Quelle taille tu fais?</td>
+</tr>
+<tr class="row-odd"><td>How much do you weigh?</td>
+<td>Tu pèses combien?</td>
+</tr>
+<tr class="row-even"><td>How old are you?</td>
+<td>Quel age as-tu?</td>
+</tr>
+<tr class="row-odd"><td>When is your birthday?</td>
+<td>C&#8217;est quand ton anniversaire?</td>
+</tr>
+<tr class="row-even"><td>Why is your name Pepper?</td>
+<td>Pourquoi tu t&#8217;appelles Pepper?</td>
+</tr>
+<tr class="row-odd"><td>Why is your name Nao?</td>
+<td>Pourquoi tu t&#8217;appelles Nao?</td>
+</tr>
+<tr class="row-even"><td>Who decided to call you like that?</td>
+<td>Qui est-ce qui t&#8217;a appelé comme ça?</td>
+</tr>
+<tr class="row-odd"><td>What does Aldebaran mean?</td>
+<td>Aldebaran ça veut dire quoi?</td>
+</tr>
+<tr class="row-even"><td>Are you a robot?</td>
+<td>Es-tu un robot?</td>
+</tr>
+<tr class="row-odd"><td>What is a humanoid robot?</td>
+<td>C&#8217;est quoi un robot humanoïde?</td>
+</tr>
+<tr class="row-even"><td>What is a robot?</td>
+<td>C&#8217;est quoi un robot?</td>
+</tr>
+<tr class="row-odd"><td>I want to change your name.</td>
+<td>Je voudrais changer ton nom.</td>
+</tr>
+<tr class="row-even"><td>What are you made of?</td>
+<td>Tu es en quelle matière?</td>
+</tr>
+<tr class="row-odd"><td>Do you have a family?</td>
+<td>Est-ce que tu as de la famille?</td>
+</tr>
+<tr class="row-even"><td>Do you know Nao?</td>
+<td>Tu connais Nao?</td>
+</tr>
+<tr class="row-odd"><td>Do you know Pepper?</td>
+<td>Tu connais Pepper?</td>
+</tr>
+<tr class="row-even"><td>Do you know Romeo?</td>
+<td>Tu connais Roméo?</td>
+</tr>
+<tr class="row-odd"><td>Are you a boy or a girl?</td>
+<td>Tu es un garçon ou une fille?</td>
+</tr>
+<tr class="row-even"><td>Are you a boy?</td>
+<td>Tu es un garçon?</td>
+</tr>
+<tr class="row-odd"><td>What is your tablet for?</td>
+<td>Pourquoi tu as une tablette?</td>
+</tr>
+<tr class="row-even"><td>What colour are you?</td>
+<td>De quelle couleur es-tu?</td>
+</tr>
+<tr class="row-odd"><td>Do you know the laws of robotics?</td>
+<td>Tu connais les lois de la Robotique?</td>
+</tr>
+<tr class="row-even"><td>Are you kind?</td>
+<td>Tu es gentil?</td>
+</tr>
+<tr class="row-odd"><td>Are you cool?</td>
+<td>Tu es cool?</td>
+</tr>
+<tr class="row-even"><td>Are you sentient?</td>
+<td>Tu es conscient?</td>
+</tr>
+<tr class="row-odd"><td>Can you feel emotions?</td>
+<td>Peux-tu ressentir des émotions?</td>
+</tr>
+<tr class="row-even"><td>How do you detect emotions?</td>
+<td>Comment détectes-tu les émotions?</td>
+</tr>
+<tr class="row-odd"><td>Are you intelligent?</td>
+<td>Es-tu intelligent?</td>
+</tr>
+<tr class="row-even"><td>Can I trust you?</td>
+<td>Est-ce que je peux te faire confiance?</td>
+</tr>
+<tr class="row-odd"><td>Are you alive?</td>
+<td>Es-tu vivant?</td>
+</tr>
+<tr class="row-even"><td>Can you think?</td>
+<td>Est-ce que tu peux penser?</td>
+</tr>
+<tr class="row-odd"><td>Will robots replace humans?</td>
+<td>Est-ce que les robots vont remplacer les humains?</td>
+</tr>
+<tr class="row-even"><td>Can you do anything I tell you?</td>
+<td>Est-ce que tu peux faire tout ce que je te demande?</td>
+</tr>
+<tr class="row-odd"><td>Do you eat?</td>
+<td>Est-ce que tu manges?</td>
+</tr>
+<tr class="row-even"><td>Can you remember me?</td>
+<td>Est-ce que tu peux me reconnaître?</td>
+</tr>
+<tr class="row-odd"><td>Can I buy you?</td>
+<td>Je peux t&#8217;acheter?</td>
+</tr>
+<tr class="row-even"><td>How much do you cost?</td>
+<td>Combien tu coûtes?</td>
+</tr>
+<tr class="row-odd"><td>Do you play football?</td>
+<td>Tu joues au foot?</td>
+</tr>
+<tr class="row-even"><td>What is your nickname?</td>
+<td>Quel est ton surnom?</td>
+</tr>
+<tr class="row-odd"><td>What is your address?</td>
+<td>Quelle est ton adresse?</td>
+</tr>
+<tr class="row-even"><td>What is your friend&#8217;s name?</td>
+<td>Comment s&#8217;appelle ton frère?</td>
+</tr>
+<tr class="row-odd"><td>Are you mean?</td>
+<td>Est-ce que tu es méchant?</td>
+</tr>
+<tr class="row-even"><td>Are you human?</td>
+<td>Es-tu humain?</td>
+</tr>
+<tr class="row-odd"><td>How many degrees of liberty do you have?</td>
+<td>Tu as combien de degrés de liberté?</td>
+</tr>
+<tr class="row-even"><td>You are cute!</td>
+<td>Tu es mignon!</td>
+</tr>
+<tr class="row-odd"><td>Can we be friends?</td>
+<td>Je peux être ton ami?</td>
+</tr>
+<tr class="row-even"><td>Can you talk?</td>
+<td>Est-ce que tu peux parler?</td>
+</tr>
+<tr class="row-odd"><td>Can you see me?</td>
+<td>Est-ce que tu peux me voir?</td>
+</tr>
+<tr class="row-even"><td>Can you hear me?</td>
+<td>Est-ce que tu peux m&#8217;entendre?</td>
+</tr>
+<tr class="row-odd"><td>Can you understand me?</td>
+<td>Est-ce que tu peux me comprendre?</td>
+</tr>
+<tr class="row-even"><td>Are you a toy?</td>
+<td>Tu es un jouet?</td>
+</tr>
+<tr class="row-odd"><td>Do you like humans?</td>
+<td>Est-ce que tu aimes les humains?</td>
+</tr>
+<tr class="row-even"><td>Do you like animals?</td>
+<td>Est-ce que tu aimes les animaux?</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="languages">
+<h3>Languages<a class="headerlink" href="#languages" title="Permalink to this headline">¶</a></h3>
+<p>You can ask <em>NAO</em> witch languages he can speak and understand.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="47%" />
+<col width="53%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">English</th>
+<th class="head">French</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>What languages do you speak?</td>
+<td>Quelles langues parles-tu?</td>
+</tr>
+</tbody>
+</table>
+<p>You can even ask him to change his current settings.</p>
+<p>However, it is not recommended to switch the language setting while the <a class="reference internal" href="nao_life.html#alife"><em>Autonomous Life</em></a> is on.
+To change the settings safely, prefer the  <a class="reference internal" href="webpage.html#webpage-nao"><em>NAO Web page</em></a>  while the <a class="reference internal" href="nao_life.html#alife"><em>Autonomous Life</em></a> is off.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="47%" />
+<col width="53%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">English</th>
+<th class="head">French</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Speak French.</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>Can you speak French?</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>Speak Japanese.</td>
+<td>Parle japonais.</td>
+</tr>
+<tr class="row-odd"><td>Can you speak Japanese?</td>
+<td>Tu sais parler japonais?</td>
+</tr>
+<tr class="row-even"><td>Speak Chinese.</td>
+<td>Parle chinois.</td>
+</tr>
+<tr class="row-odd"><td>Can you speak Chinese?</td>
+<td>Tu sais parler chinois?</td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Parle anglais.</td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td>Tu sais parler anglais?</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <!-- <div class="footernav">
+    &laquo; <a href="nao_life.html" title="Understanding Autonomous Life settings">Understanding Autonomous Life settings</a>
+     |
+    <a href="understanding.html" title="More details about &lt;em&gt;NAO&lt;/em&gt;" accesskey="U">More details about &lt;em&gt;NAO&lt;/em&gt;</a>
+   |
+    <a href="store_home.html" title="&lt;em&gt;Apps 2.0 Store&lt;/em&gt;"><em>Apps 2.0 Store</em></a> &raquo;</div> -->
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+  <h3>Table Of Contents</h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../contents.html">Site map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../news/index.html">What’s new</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../home_nao.html"><em>NAO</em> Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html"><em>NAO</em> - User Guide</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="introduction_nao.html">First steps with <em>NAO</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="interacting.html">Daily use</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuring.html">Configuring and settings</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="understanding.html">More details about <em>NAO</em></a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="chest_button_usages.html">Main usages of the Chest button</a></li>
+<li class="toctree-l4"><a class="reference internal" href="voice_notifications.html">Event and state notifications</a></li>
+<li class="toctree-l4"><a class="reference internal" href="boot_process_nao.html">Understanding the boot process</a></li>
+<li class="toctree-l4"><a class="reference internal" href="shutdown_process_nao.html">Understanding the shut down process</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nao_life.html">Understanding Autonomous Life settings</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="">Basic Channel - What can I say to <em>NAO</em></a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="store_home.html"><em>Apps 2.0 Store</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="taking-care.html">Taking care of NAO</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../family/index.html"><em>NAO</em> - Technical Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../asknao/index_asknao.html">ASK NAO Interface - V2 - User Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../home_romeo.html"><em>Romeo</em> Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index_dev_guide.html">NAOqi Developer guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../legal/notice.html">Legal notices</a></li>
+</ul>
+
+    <h3><a href="../index.html">On this page</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Basic Channel - What can I say to <em>NAO</em></a><ul>
+<li><a class="reference internal" href="#english-french">English - French</a><ul>
+<li><a class="reference internal" href="#meet-robon">Meet <em>NAO</em></a></li>
+<li><a class="reference internal" href="#about-the-talk">About the talk</a></li>
+<li><a class="reference internal" href="#about-settings-and-system">About settings and system</a></li>
+<li><a class="reference internal" href="#robon-s-skills"><em>NAO</em>&#8216;s skills</a></li>
+<li><a class="reference internal" href="#more-about-robon">More about <em>NAO</em></a></li>
+<li><a class="reference internal" href="#languages">Languages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+          </div>
+        
+      
+    </div>
+
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="nao_life.html" title="Understanding Autonomous Life settings">previous</a>
+     |
+    <a href="understanding.html" title="More details about &lt;em&gt;NAO&lt;/em&gt;" accesskey="U">up</a>
+   |
+    <a href="store_home.html" title="&lt;em&gt;Apps 2.0 Store&lt;/em&gt;">next</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

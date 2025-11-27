@@ -1,0 +1,484 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Handling host-build for cross-compilation &mdash; qiBuild 2.1.3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.1.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="qiBuild 2.1.3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Specs" href="index.html" />
+    <link rel="next" title="CMake coding guide" href="../cmake/coding_guide.html" />
+    <link rel="prev" title="qivenv: virtualenv meets worktree" href="qivenv.html" />
+ 
+<script type="text/javascript" src="https://community.aldebaran-robotics.com/static/js/include_doc.js"></script>
+<script>
+$(window).ready(function () {
+    var width_label = 0;
+    $('dl.function-index dt > span').each(function () {
+        $(this).css('width', 'auto');
+        width_label = Math.max(width_label, $(this).width());
+    }).width(width_label + 30);
+})
+
+</script>
+
+
+  </head>
+  <body>
+
+    <div class="document">
+  <div id="custom-doc" class="yui-t3">
+    <div id="hd">
+      <h1><a href="../../../index.html">qiBuild documentation</a></h1>
+      <div id="global-nav">
+        <a title="NAOqi Developer guide" href="../../../index.html">Home</a>
+        
+         |
+        <a title="Search" href="../../../search.html">Search</a>
+         |
+        <a title="Index" href="../../../genindex.html">Index</a>
+        
+         |
+        <a title="CMake index" href="../../../cmake-functions-index.html">CMake index</a>
+         |
+        <a title="Python index" href="../../../py-modindex.html">Python index</a>
+        
+        
+      </div>
+      <div class="nav">
+    &laquo; <a href="qivenv.html" title="qivenv: virtualenv meets worktree">previous</a>
+     |
+    <a href="index.html" title="Specs" accesskey="U">up</a>
+   |
+    <a href="../cmake/coding_guide.html" title="CMake coding guide">next</a> &raquo;</div>
+    </div>
+
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="hacking-contrib-specs-handling_host_build_for_cross_compilation">
+            
+  <div class="section" id="handling-host-build-for-cross-compilation">
+<span id="id1"></span><h1>Handling host-build for cross-compilation<a class="headerlink" href="#handling-host-build-for-cross-compilation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="use-case">
+<h2>Use case<a class="headerlink" href="#use-case" title="Permalink to this headline">¶</a></h2>
+<p>A project providing both data for the <em>target</em> and tools to generate this data.</p>
+<p>So:</p>
+<ul class="simple">
+<li>the tools must be built to run on the <em>host</em>;</li>
+<li>the data generation, which is part of the cross-compilation run, should
+resolve the tools path;</li>
+</ul>
+</div>
+<div class="section" id="qibuild-and-cmake-current-state">
+<h2>qiBuild and CMake current state<a class="headerlink" href="#qibuild-and-cmake-current-state" title="Permalink to this headline">¶</a></h2>
+<p>Currently, to cross-compile a project that depends on some <em>host-tools</em>, you
+must run something like:</p>
+<div class="section" id="cmake">
+<h3>CMake<a class="headerlink" href="#cmake" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>CMake allows to search programs in some location, development files (headers
+and libraries) in others location.</li>
+<li>CMake does not provide any way yet to express this <em>host build</em> paradigm when
+executing a cross-compilation.</li>
+<li>CMake does not allow to change the toolchain the during a build, nor use
+several toolchain in a build.</li>
+</ul>
+</div>
+<div class="section" id="qibuild">
+<h3>qiBuild<a class="headerlink" href="#qibuild" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>qiBuild is executed at a higher level than CMake; qiBuild knows how to build
+projects&#8217; dependencies.</li>
+<li>qiBuild currently does not have any <em>host build</em> concept.</li>
+<li>qiBuild maintains separated staging areas (one per package and per build
+configuration).</li>
+</ul>
+</div>
+</div>
+<div class="section" id="specifications">
+<h2>Specifications<a class="headerlink" href="#specifications" title="Permalink to this headline">¶</a></h2>
+<p>This RFC addresses the <em>host build</em> issue required to fully support
+cross-compilation.</p>
+<p>This issue can also be expressed  like this: <em>the cross-build of a project may
+require some tools built for the host machine</em>. In other word a project may
+depends on some <em>host-tools</em>.</p>
+<p>So, some project may need to be built either:</p>
+<ul class="simple">
+<li>for the host machine only, it only provides host-tools;</li>
+<li>or for the target machine only;</li>
+<li>or for both the target and the host machine.</li>
+</ul>
+<p>qiBuild/CMake already know how to run the first two builds in two distinct
+runs.</p>
+<p>This RFC is about handling these configurations of build in one run.</p>
+<p>This RFC intends to address the issue at the qiBuild level, not at the CMake
+one.</p>
+<div class="section" id="rfc-keypoints">
+<h3>RFC keypoints<a class="headerlink" href="#rfc-keypoints" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">CMake only needs to know one compiler (cross or native);</p>
+</li>
+<li><p class="first">No need to hack some CMake code to support this; so it will work out-of-box
+for existing CMake projects.</p>
+</li>
+<li><p class="first">This new property belongs to the project metadata, so will be stored in the
+<tt class="docutils literal"><span class="pre">qiproject.xml</span></tt> file.</p>
+</li>
+<li><p class="first">The dependency against some <em>host</em> tools/project should be declared in the
+<tt class="docutils literal"><span class="pre">qiproject.xml</span></tt> file:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="c">&lt;!-- qiproject.xml file --&gt;</span>
+<span class="nt">&lt;project</span> <span class="na">name=</span><span class="s">&quot;bar&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;depends</span> <span class="na">buildtime=</span><span class="s">&quot;true&quot;</span> <span class="na">runtime=</span><span class="s">&quot;true&quot;</span> <span class="na">names=</span><span class="s">&quot;spam eggs&quot;</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;depends</span> <span class="na">runtime=</span><span class="s">&quot;true&quot;</span> <span class="na">names=</span><span class="s">&quot;beans&quot;</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;depends</span> <span class="na">host=</span><span class="s">&quot;true&quot;</span> <span class="na">names=</span><span class="s">&quot;toolbar&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/project&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">A project can depend on itself as a <em>host dependency</em>. In such case, this
+must be declared in the <tt class="docutils literal"><span class="pre">qiproject.xml</span></tt> file:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="c">&lt;!-- qiproject.xml file --&gt;</span>
+<span class="nt">&lt;project</span> <span class="na">name=</span><span class="s">&quot;foo&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;depends</span> <span class="na">host=</span><span class="s">&quot;true&quot;</span> <span class="na">names=</span><span class="s">&quot;foo&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/project&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">The <em>host</em> dependencies will only be taken in account when using a
+cross-toolchain.</p>
+</li>
+<li><p class="first">When running a native build, the <em>host dependencies</em> are merged into the
+<em>buildtime dependency list</em>; the project itself dependency is dropped.</p>
+<p>The following:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="c">&lt;!-- qiproject.xml file --&gt;</span>
+<span class="nt">&lt;project</span> <span class="na">name=</span><span class="s">&quot;foo&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;depends</span> <span class="na">buildtime=</span><span class="s">&quot;true&quot;</span> <span class="na">runtime=</span><span class="s">&quot;true&quot;</span> <span class="na">names=</span><span class="s">&quot;eggs&quot;</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;depends</span> <span class="na">buildtime=</span><span class="s">&quot;true&quot;</span> <span class="na">names=</span><span class="s">&quot;spam&quot;</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;depends</span> <span class="na">host=</span><span class="s">&quot;true&quot;</span> <span class="na">names=</span><span class="s">&quot;toolbar foo&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/project&gt;</span>
+</pre></div>
+</div>
+<p>would behave like:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="c">&lt;!-- qiproject.xml file --&gt;</span>
+<span class="nt">&lt;project</span> <span class="na">name=</span><span class="s">&quot;foo&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;depends</span> <span class="na">buildtime=</span><span class="s">&quot;true&quot;</span> <span class="na">runtime=</span><span class="s">&quot;true&quot;</span> <span class="na">names=</span><span class="s">&quot;eggs&quot;</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;depends</span> <span class="na">buildtime=</span><span class="s">&quot;true&quot;</span> <span class="na">names=</span><span class="s">&quot;spam toolbar&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/project&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">In any build qiBuild first parses the projects&#8217; dependencies, then:</p>
+<ul class="simple">
+<li>in native build, build (ie. CMake configuration and native compilation)
+just starts as usual.</li>
+<li>in cross build, qiBuild will:<ol class="arabic">
+<li>first run the <em>host build</em> (ie. CMake configuration for the <em>host
+build</em> and native compilation),</li>
+<li>then run the <em>target build</em> (ie. CMake configuration for the <em>cross
+build</em> and cross-compilation).</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p class="first">A toolchain should declare its type: <em>native</em> or <em>cross</em>, as any other
+package metadata.</p>
+</li>
+<li><p class="first">In every build, qiBuild must allow to specify the build configuration for the
+<em>target</em>:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="go">qibuild configure --config &lt;target toolchain name&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">In <em>cross build</em>, qiBuild must allow to specify the <em>host build</em>
+configuration:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="go">qibuild configure --config &lt;target toolchain name&gt; \</span>
+<span class="go">  --host-config-name &lt;host toolchain name&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">In <em>native build</em>, the <em>host build</em> configuration is the <em>target build</em>
+configuration, so it is not necessary to specify the former one.</p>
+</li>
+<li><p class="first">qiBuild should allow to associate a <em>host configuration</em> to a <em>target one</em>.</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="c">&lt;!-- toolchain config file --&gt;</span>
+<span class="nt">&lt;config</span> <span class="na">name=</span><span class="s">&quot;cross-arm&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;toolchain</span> <span class="na">name=</span><span class="s">&quot;arm_ctc&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;host</span> <span class="na">name=</span><span class="s">&quot;linux64&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/config&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">qiBuild should allow to build for the <em>host</em> in <em>debug</em> and for the <em>target</em>
+in <em>release</em>, and vice-versa.</p>
+<p>The following examples mix debug/release between _host* and <em>target</em> builds:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="go">qibuild configure --config &lt;target toolchain name&gt; --release \</span>
+<span class="go">  --host-config-name &lt;host toolchain name&gt; --host-config-debug</span>
+
+<span class="go">qibuild configure --config &lt;target toolchain name&gt; --debug \</span>
+<span class="go">  --host-config-name &lt;host toolchain name&gt; --host-config-release</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">If the <em>host</em> build type is not set, qiBuild should use the same the <em>target</em>
+one.</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">#</span> will build both host and target in release:
+<span class="go">qibuild configure --config &lt;target toolchain name&gt; --release \</span>
+<span class="go">  --host-config-name &lt;host toolchain name&gt;</span>
+
+<span class="gp">#</span> will build both host and target in debug:
+<span class="go">qibuild configure --config &lt;target toolchain name&gt; --debug \</span>
+<span class="go">  --host-config-name &lt;host toolchain name&gt;</span>
+
+<span class="gp">#</span> will build both host and target using the default build <span class="nb">type</span>:
+<span class="go">qibuild configure --config &lt;target toolchain name&gt; \</span>
+<span class="go">  --host-config-name &lt;host toolchain name&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">qiBuild should allow to use default <em>target configurations</em> and default <em>host
+configurations</em>; if not set, the default <em>host configuration</em> is the
+<tt class="docutils literal"><span class="pre">system</span></tt> toolchain:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="go">qibuild configure --config &lt;target toolchain name&gt;</span>
+</pre></div>
+</div>
+<p>is equivalent to:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="go">qibuild configure --config &lt;target toolchain name&gt; \</span>
+<span class="go">  --host-config-name system</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="notes">
+<h3>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">qiBuild already knows if a toolchain is <em>native</em> or <em>cross</em>.</p>
+<p>A <em>cross-toolchain</em> (the cross-compiler package) has a <tt class="docutils literal"><span class="pre">host</span></tt> and a
+<tt class="docutils literal"><span class="pre">target</span></tt> metadata.</p>
+</li>
+<li><p class="first">For a project, a <em>host build</em> is a build whose the configuration uses the
+native compiler of the machine; in the simplest case, it the project will be
+built using the <em>system</em> toolchain.</p>
+</li>
+<li><p class="first">The <em>host</em> toolchain choice is solved like this:</p>
+<ol class="arabic simple">
+<li>Use the <em>host</em> toolchain set on the command line, if not:</li>
+<li>Use the <em>host</em> toolchain set in the toolchain configuration file as
+property of the given <em>target</em> toolchain, if not:</li>
+<li>Use the <em>system</em> toolchain as the <em>host</em> toolchain.</li>
+</ol>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="full-example">
+<h2>Full example<a class="headerlink" href="#full-example" title="Permalink to this headline">¶</a></h2>
+<p>Given the following source tree:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="go">barbooz/</span>
+<span class="go">|-- qiproject.xml</span>
+<span class="go">|-- data/</span>
+<span class="go">|   |-- input01.xml</span>
+<span class="go">|   `-- input02.xml</span>
+<span class="go">|-- host-tools/</span>
+<span class="go">|   `-- main.cpp</span>
+<span class="go">|-- lib_io/</span>
+<span class="go">|   |-- barbooz_io.hpp</span>
+<span class="go">|   `-- barbooz_io.cpp</span>
+<span class="go">`-- lib_engine/</span>
+<span class="go">    |-- barbooz_engine.hpp</span>
+<span class="go">    `-- barbooz_engine.cpp</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">qiproject.xml</span></tt> could be:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;project</span> <span class="na">name=</span><span class="s">&quot;barbooz&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;host&gt;</span>
+    <span class="nt">&lt;depends</span> <span class="na">buildtime=</span><span class="s">&quot;true&quot;</span> <span class="na">runtime=</span><span class="s">&quot;true&quot;</span> <span class="na">names=</span><span class="s">&quot;libqi opencv&quot;</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/host&gt;</span>
+  <span class="nt">&lt;depends</span> <span class="na">buildtime=</span><span class="s">&quot;true&quot;</span> <span class="na">runtime=</span><span class="s">&quot;true&quot;</span> <span class="na">names=</span><span class="s">&quot;boost libqi libnaoqi&quot;</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;depends</span> <span class="na">runtime=</span><span class="s">&quot;true&quot;</span> <span class="na">names=</span><span class="s">&quot;naoqi&quot;</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;depends</span> <span class="na">host=</span><span class="s">&quot;true&quot;</span> <span class="na">names=</span><span class="s">&quot;barbooz&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/project&gt;</span>
+</pre></div>
+</div>
+<p>The CMakeLists.txt could be:</p>
+<div class="highlight-cmake"><pre>cmake_minimum_required(VERSION 2.8)
+find_package(qibuild)
+
+project(barbooz)
+
+# libbarbooz_io use by both generator and target library
+qi_create_lib(barbooz_io
+  lib_io/barbooz_io.hpp
+  lib_io/barbooz_io.cpp
+)
+qi_use_lib(barbooz_io
+  ASSUME_SYSTEM_INCLUDE
+  QI
+)
+qi_stage_lib(barbooz_io)
+
+# host-tools:
+qi_create_bin(barboozator
+  generator/main.cpp
+)
+qi_use_lib(barboozator
+  ASSUME_SYSTEM_INCLUDE
+  OPENCV_CORE
+  QI
+)
+qi_stage_bin(barboozator)
+
+# target stuff:
+qi_create_lib(barbooz
+  lib_engine/barbooz_engine.hpp
+  lib_engine/barbooz_engine.cpp
+)
+qi_use_lib(barbooz
+  BARBOOZ_IO
+)
+qi_use_lib(barbooz
+  ASSUME_SYSTEM_INCLUDE
+  BOOST
+  LIBNAOQI
+  QI
+)
+
+# generate/install data
+find_program(barboozator)
+file(glob in data/*.xml)
+foreach f in ${in}
+  ${generator} ${f} &gt; ${f}.dat #sh-style :P
+  qi_install_data(${f}.dat
+    SUBFOLDER barbooz/data
+  )
+endforeach()</pre>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <!-- <div class="footernav">
+    &laquo; <a href="qivenv.html" title="qivenv: virtualenv meets worktree">qivenv: virtualenv meets worktree</a>
+     |
+    <a href="index.html" title="Specs" accesskey="U">Specs</a>
+   |
+    <a href="../cmake/coding_guide.html" title="CMake coding guide">CMake coding guide</a> &raquo;</div> -->
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+  <h3>Table Of Contents</h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../beginner/index.html">Welcome to qiBuild documentation !</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../advanced/index.html">Advanced qibuild usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Hacking qiBuild</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Contributing to qiBuild</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../reporting_bugs.html">Reporting qiBuild issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../todo.html">qibuild TODO</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Specs</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="qidoc3.html">qidoc3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qivenv.html">qivenv: virtualenv meets worktree</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="">Handling host-build for cross-compilation</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cmake/coding_guide.html">CMake coding guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/coding_guide.html">Python coding guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../test_driven_development.html">qibuild: using test driven development</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../running_test_suite.html">Running qiBuild test suite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../writing_new_tests.html">Writing new tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../writing_documentation.html">Writing qiBuild documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/cmake/managing_deps.html">Managing dependences with qiBuild: an overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/cmake/searching.html">Search order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/cmake/shared_libs.html">Managing shared libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/cmake/index.html">qiBuild CMake framework design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/python/index.html">qiBuild Python framework design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/index.html">qiBuild design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python/index.html">qiBuild Python documentation</a></li>
+</ul>
+</li>
+</ul>
+
+    <h3><a href="../../../index.html">On this page</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Handling host-build for cross-compilation</a><ul>
+<li><a class="reference internal" href="#use-case">Use case</a></li>
+<li><a class="reference internal" href="#qibuild-and-cmake-current-state">qiBuild and CMake current state</a><ul>
+<li><a class="reference internal" href="#cmake">CMake</a></li>
+<li><a class="reference internal" href="#qibuild">qiBuild</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#specifications">Specifications</a><ul>
+<li><a class="reference internal" href="#rfc-keypoints">RFC keypoints</a></li>
+<li><a class="reference internal" href="#notes">Notes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#full-example">Full example</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+          </div>
+        
+      
+    </div>
+
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="qivenv.html" title="qivenv: virtualenv meets worktree">previous</a>
+     |
+    <a href="index.html" title="Specs" accesskey="U">up</a>
+   |
+    <a href="../cmake/coding_guide.html" title="CMake coding guide">next</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>
