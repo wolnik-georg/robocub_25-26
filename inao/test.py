@@ -8,3 +8,5 @@ nao = NAO("192.168.1.118")
 
 # Test it
 nao.tts.say("Hello, We are Team Electro technik")
+
+# export PYTHONPATH=/home/georg/Desktop/hands_on_nao/pynaoqi/pynaoqi-python2.7-2.1.2.17-linux64

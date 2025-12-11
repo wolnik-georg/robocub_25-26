@@ -1,0 +1,37 @@
+# Dockerfile for NAO Robot Development on Mac (Docker Desktop)
+FROM ubuntu:20.04
+
+# Avoid interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install Python 2.7 and required dependencies
+RUN apt-get update && apt-get install -y \
+    python2.7 \
+    python2.7-dev \
+    python-pip \
+    wget \
+    tar \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Download and extract NAO Python SDK (linux64 for Docker Linux container)
+RUN mkdir -p /opt/nao && \
+    cd /opt/nao && \
+    wget -q https://community-static.aldebaran.com/resources/2.1.2.17/sdk/pynaoqi-python2.7-2.1.2.17-linux64.tar && \
+    tar -xf pynaoqi-python2.7-2.1.2.17-linux64.tar && \
+    rm pynaoqi-python2.7-2.1.2.17-linux64.tar
+
+# Set PYTHONPATH for NAO SDK
+ENV PYTHONPATH=/opt/nao/pynaoqi-python2.7-2.1.2.17-linux64:$PYTHONPATH
+
+# Create workspace directory
+WORKDIR /workspace
+
+# Copy inao library
+COPY inao/ /workspace/inao/
+
+# Copy test script
+COPY inao/test.py /workspace/test.py
+
+# Default command - start bash for interactive use
+CMD ["/bin/bash"]
