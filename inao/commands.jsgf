@@ -1,0 +1,59 @@
+#JSGF V1.0;
+
+/**
+ * NAO Robot Voice Command Grammar
+ * Defines all valid command structures for speech recognition
+ * This grammar drastically improves accuracy by constraining recognition
+ * to only valid command patterns (vs 60,000+ word dictionary)
+ */
+
+grammar commands;
+
+// Main command structure - all commands must start with "simon says"
+public <command> = simon says <action>;
+
+// All possible actions
+<action> = <query> | <search> | <movement> | <turn> | <posture> | <arm_action> | <head_action> | <gesture> | <control>;
+
+// Query: "how many X"
+<query> = how many <object> [s];
+
+// Search: "search for X" or "find X"
+<search> = (search for | find) <object> [s];
+
+// Movement: "go/move/walk forward/backward/left/right"
+<movement> = (go | move | walk) <direction>;
+<direction> = forward | backward | left | right;
+
+// Turn: "turn left/right"
+<turn> = turn (left | right);
+
+// Posture: "stand/sit/crouch" with optional "up/down"
+<posture> = stand [up] | sit [down] | crouch [down];
+
+// Arm actions: "raise left/right/both arm(s)"
+<arm_action> = raise (left | right | both) (arm | arms);
+
+// Head actions: "look left/right/up/down"
+<head_action> = look (left | right | up | down);
+
+// Gesture: "wave"
+<gesture> = wave;
+
+// Control: "stop" or "quit"
+<control> = stop | quit | exit;
+
+// Object list (COCO dataset - most common objects)
+<object> = 
+    person | people |
+    bottle | cup | glass |
+    chair | couch | bench |
+    book | laptop | phone | keyboard | mouse |
+    car | bus | truck | bicycle | motorcycle |
+    dog | cat | bird | horse |
+    table | bed | toilet | tv |
+    apple | banana | orange | pizza | cake |
+    clock | vase | scissors |
+    backpack | umbrella | handbag | suitcase |
+    remote | cell phone |
+    fork | knife | spoon | bowl;

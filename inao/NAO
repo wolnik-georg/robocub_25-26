@@ -1,0 +1,30 @@
+# NAO class with move_joint method added
+
+from naoqi import ALProxy
+import time
+import math  # For potential angle calculations
+
+
+class NAO:
+    def __init__(self, robotIP):
+        self.robotIP = robotIP
+        self.PORT = 9559
+        self.tts = ALProxy("ALTextToSpeech", self.robotIP, self.PORT)
+
+    def move_joint(self, joint_name="HeadYaw", angle=0.0, speed=0.1, waitingtime=2.0):
+        """
+        Move a specific joint
+        :param joint_name: name of the joint
+        :param angle: angle in radians
+        :param speed: speed of the movement (0.0 to 1.0)
+        :return: None
+        """
+        ttsProxy = ALProxy("ALTextToSpeech", self.robotIP, self.PORT)
+        motionProxy = ALProxy("ALMotion", self.robotIP, self.PORT)
+        motionProxy.wakeUp()
+        motionProxy.setStiffnesses(joint_name, 1.0)
+        motionProxy.setAngles(joint_name, angle, speed)
+        ttsProxy.say("Movement of joint {} complete!".format(joint_name))
+        time.sleep(waitingtime)
+        motionProxy.setStiffnesses(joint_name, 0.0)
+        motionProxy.rest()

@@ -183,6 +183,8 @@ def continuousVisionProcessing(IP, PORT, target_objects=None, max_frames=None):
     Runs indefinitely or until max_frames reached. Press 'q' in video window or Ctrl+C to stop.
     """
     camProxy = ALProxy("ALVideoDevice", IP, PORT)
+    # Create NAO instance for speech
+    nao = NAO(IP)
     resolution = 2  # VGA
     colorSpace = 11  # RGB
 
@@ -238,6 +240,21 @@ def continuousVisionProcessing(IP, PORT, target_objects=None, max_frames=None):
                         max_obj[0], max_obj[1] * 100
                     )
                 )
+                # Count objects by type
+                object_counts = {}
+                for label, conf in detected:
+                    object_counts[label] = object_counts.get(label, 0) + 1
+                # Generate speech string for counts
+                speech_parts = []
+                for label, count in object_counts.items():
+                    if count == 1:
+                        speech_parts.append("a {}".format(label))
+                    else:
+                        speech_parts.append("{} {}s".format(count, label))
+                speech_text = "I see " + " and ".join(speech_parts)
+                print("  Speech: {}".format(speech_text))
+                # Robot speaks the counts
+                nao.tts.say(speech_text)
             else:
                 print("  No objects above threshold detected.")
 

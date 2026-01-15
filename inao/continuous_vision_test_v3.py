@@ -2,7 +2,7 @@
 # Continuous Vision Processing with Visualization: Fetch frames continuously from NAO, display live video, process with YOLO + OCR
 # Builds on vision_works.py (image capture) + vision_v3_test.py (detection)
 # Processes frames in real-time on laptop with live video display
-# Added: Consistent head rotation using NAO class move_joint method (every 3 frames)
+# Added: Optional head rotation mode using MotionReactions class (loops RotateHeadLeft and RotateHeadRight continuously)
 
 import sys
 import time
@@ -17,6 +17,7 @@ from naoqi import ALProxy
 
 sys.path.insert(0, "/home/georg/Desktop/hands_on_nao/inao")
 from inao import NAO
+from motion_reactions import MotionReactions  # Import for head rotation mode
 
 # Model setup – place files in ./models/
 MODEL_DIR = "./models"
@@ -179,15 +180,19 @@ def extract_numbers(image):
     return [num for num, conf in sorted_results], filtered_conf_map
 
 
-def continuousVisionProcessing(IP, PORT, target_objects=None, max_frames=None):
+def continuousVisionProcessing(
+    IP, PORT, target_objects=None, max_frames=None, enable_head_rotation=False
+):
     """
     Continuously fetch frames from NAO, display live video, process with YOLO + OCR on laptop.
-    Robot rotates head consistently while processing (every 3 frames).
+    Optional: Enable head rotation mode to loop RotateHeadLeft and RotateHeadRight continuously.
     Runs indefinitely or until max_frames reached. Press 'q' in video window or Ctrl+C to stop.
     """
     camProxy = ALProxy("ALVideoDevice", IP, PORT)
-    # Create NAO instance for speech and movement
+    # Create NAO instance for speech
     nao = NAO(IP)
+    # Create MotionReactions instance for head rotation mode
+    motion = MotionReactions(IP, PORT) if enable_head_rotation else None
     resolution = 2  # VGA
     colorSpace = 11  # RGB
 
@@ -198,19 +203,21 @@ def continuousVisionProcessing(IP, PORT, target_objects=None, max_frames=None):
     # Subscribe to video feed
     videoClient = camProxy.subscribe("python_client", resolution, colorSpace, 5)
     print(
-        "Subscribed to NAO video feed. Processing frames continuously with live visualization and head rotation..."
+        "Subscribed to NAO video feed. Processing frames continuously with live visualization..."
     )
     if target_objects:
         print("Filtering for: {}".format(", ".join(target_objects)))
     else:
         print("Detecting all objects.")
-    print(
-        "Robot will rotate head consistently (every 3 frames). Press 'q' in video window or Ctrl+C to stop."
-    )
+    if enable_head_rotation:
+        print(
+            "Head rotation mode enabled: Alternating RotateHeadLeft and RotateHeadRight continuously."
+        )
+        motion.wakeUp()  # Wake up once at the start of head rotation mode
+    print("Press 'q' in video window or Ctrl+C to stop.")
 
     frame_count = 0
-    head_direction = 1  # 1 for right, -1 for left
-    head_angle = 0.0
+    head_direction = 1  # 1 for left, -1 for right
     try:
         while True:
             if max_frames and frame_count >= max_frames:
@@ -295,13 +302,21 @@ def continuousVisionProcessing(IP, PORT, target_objects=None, max_frames=None):
             frame_count += 1
             time.sleep(0.5)  # Brief delay between frames
 
-            # Consistent head rotation: Alternate between left and right every 3 frames
-            if frame_count % 3 == 0:
-                head_angle = head_direction * math.pi / 4  # +/- 45 degrees
+            # Optional head rotation mode: Alternate RotateHeadLeft and RotateHeadRight every 3 frames for continuous loop
+            # This allows 1-2 images to be captured at each position (middle, left, right)
+            if enable_head_rotation and frame_count % 3 == 0:
+                if head_direction == 1:
+                    motion.move_joint(
+                        "HeadYaw", math.pi / 4, 0.1, 1.5
+                    )  # RotateHeadLeft - increased waitingtime to 1.5s
+                else:
+                    motion.move_joint(
+                        "HeadYaw", -math.pi / 4, 0.1, 1.5
+                    )  # RotateHeadRight - increased waitingtime to 1.5s
                 head_direction *= -1  # Switch direction
-                nao.move_joint(
-                    "HeadYaw", head_angle, 0.1, 0.5
-                )  # Move head with short wait
+                time.sleep(
+                    1.0
+                )  # Additional delay after movement to stabilize and capture images
 
     except KeyboardInterrupt:
         print("\nStopped by user.")
@@ -310,6 +325,8 @@ def continuousVisionProcessing(IP, PORT, target_objects=None, max_frames=None):
     finally:
         camProxy.unsubscribe(videoClient)
         cv2.destroyAllWindows()
+        if enable_head_rotation:
+            motion.rest()  # Rest once at the end of head rotation mode
         print("Unsubscribed from video feed. Processed {} frames.".format(frame_count))
 
 
@@ -324,5 +341,14 @@ if __name__ == "__main__":
     target_objects = None
     # target_objects = None  # For all objects
 
+    # Enable head rotation mode (set to True to activate looping RotateHeadLeft/Right)
+    enable_head_rotation = True
+
     # Run continuously (set max_frames=10 for testing)
-    continuousVisionProcessing(IP, PORT, target_objects=target_objects, max_frames=None)
+    continuousVisionProcessing(
+        IP,
+        PORT,
+        target_objects=target_objects,
+        max_frames=None,
+        enable_head_rotation=enable_head_rotation,
+    )
